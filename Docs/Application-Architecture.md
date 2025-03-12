@@ -9,7 +9,6 @@
 - View workout history
 - Access training plans
 - View lineups
-  \
 
 ## Coaches' Features
 
@@ -20,5 +19,3 @@
 - Send messages to the team
 
 ---
-
-\
