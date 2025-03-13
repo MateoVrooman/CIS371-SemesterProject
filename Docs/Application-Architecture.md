@@ -26,7 +26,8 @@ Uses ReactJS and Next.js - Tailwind for styling
 
 ### Pages
 
-- /login: Start here, create an account or login.
+- /login: Log in to existing account.
+- /register: Create an account.
 - /dashboard: Landing page, gives a summary of recent workouts and races, upcoming practices, and messages.
 - /workouts: Athletes log workouts with the workoutForm which sends data to firestore.
 - /training-plans: Coaches can manage training plans here and assign workouts. Athletes can view the training plan created by the coach.
