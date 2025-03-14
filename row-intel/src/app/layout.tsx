@@ -2,6 +2,7 @@
 
 // src/app/layout.tsx
 import { AuthContextProvider } from "./context/AuthContext";
+import Navbar from "../components/Navbar";
 import "./globals.css";
 
 export default function RootLayout({
@@ -13,6 +14,7 @@ export default function RootLayout({
     <html>
       <body>
         <AuthContextProvider>
+          <Navbar />
           <div className="container mx-auto p-4">{children}</div>
         </AuthContextProvider>
       </body>

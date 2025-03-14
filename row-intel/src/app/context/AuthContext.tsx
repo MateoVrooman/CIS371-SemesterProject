@@ -38,12 +38,14 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
+        console.log("User is signed in: ", user);
         setUser(user);
         router.push("/dashboard"); // Redirect to dashboard after login
       } else {
         // User is signed out
+        console.log("User is signed out");
         setUser(null);
-        router.push("/login"); // Redirect to login if not authenticated
+        //router.push("/login"); // Redirect to login if not authenticated
       }
       // Set loading to false once authentication state is determined
       setLoading(false);

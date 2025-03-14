@@ -1,9 +1,11 @@
 // Mateo Vrooman - RowIntel - CIS371
 
 // pages/dashboard.tsx
+"use client";
+
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { auth } from "../lib/firebase";
+import { useRouter } from "next/navigation";
+import { auth } from "../../lib/firebase";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 
 const Dashboard = () => {
@@ -29,7 +31,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h2 className="text-red-500">Welcome to Your Dashboard</h2>
+      <h2 className="">Welcome to Your Dashboard</h2>
       {user && (
         <div>
           <p>Logged in as: {user.email}</p>
