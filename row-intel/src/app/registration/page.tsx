@@ -4,10 +4,7 @@
 
 "use client";
 import { useState, FormEvent } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { auth } from "../../lib/firebase";
-import { db } from "../../lib/firebase";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { doc, setDoc } from "firebase/firestore";
 
 const Register = () => {
   const [firstName, setFirstName] = useState<string>("");
@@ -42,19 +38,17 @@ const Register = () => {
     e.preventDefault();
     try {
       // Authenticate user by creating account with email and password
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      // Create user document in users collection
-      await setDoc(doc(db, "users", userCredential.user.uid), {
-        userId: userCredential.user.uid,
-        email: email,
-        role: role,
-        firstName: firstName,
-        lastName: lastName,
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, firstName, lastName, role }),
       });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to register");
+      }
+      router.push("/registration/team-selection");
     } catch (err) {
       console.error(err);
       setError("Failed to register. Please try again.");

@@ -4,9 +4,7 @@
 
 "use client";
 import { useState, FormEvent } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { auth } from "../../lib/firebase";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { loginUser } from "@/lib/auth";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -27,7 +26,12 @@ const Login = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!response.ok) throw new Error("Login failed.");
       router.push("/dashboard"); // Redirect to dashboard after login
     } catch (err) {
       setError("Failed to log in. Please check your credentials.");
