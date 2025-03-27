@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/firebase";
-import { collection, addDoc } from "firebase/firestore";
 import { createTeam } from "@/lib/teamHelpers";
 
-export default async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
     const { teamName, userId } = await req.json();
     if (!teamName || !userId) {
@@ -13,9 +11,9 @@ export default async function POST(req: NextRequest) {
       );
     }
 
-    const teamId = await createTeam(teamName, userId);
+    const { teamId, joinCode } = await createTeam(teamName, userId);
     return NextResponse.json(
-      { message: "Team created successfully", teamId },
+      { message: "Team created successfully", teamId, joinCode },
       { status: 200 }
     );
   } catch (error) {

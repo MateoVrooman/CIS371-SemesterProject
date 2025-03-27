@@ -12,10 +12,10 @@ export default function RootLayout({
 }) {
   return (
     <html>
-      <body>
+      <body className="h-screen w-screen overflow-hidden flex flex-col">
         <AuthContextProvider>
           <Navbar />
-          <div className="container mx-auto p-4">{children}</div>
+          {children}
         </AuthContextProvider>
       </body>
     </html>

@@ -7,6 +7,7 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { loginUser } from "@/lib/auth";
 import {
   Card,
   CardContent,
@@ -15,7 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { loginUser } from "@/lib/auth";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -26,15 +26,11 @@ const Login = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!response.ok) throw new Error("Login failed.");
-      router.push("/dashboard"); // Redirect to dashboard after login
+      const user = await loginUser(email, password);
+      console.log("User signed in: ", user);
+      router.push("/dashboard");
     } catch (err) {
-      setError("Failed to log in. Please check your credentials.");
+      console.log("Error signing in: ", err);
     }
   };
 

@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { registerUser } from "@/lib/auth";
 
 const Register = () => {
   const [firstName, setFirstName] = useState<string>("");
@@ -37,21 +38,17 @@ const Register = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      // Authenticate user by creating account with email and password
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, firstName, lastName, role }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "Failed to register");
-      }
+      const user = await registerUser(
+        email,
+        password,
+        firstName,
+        lastName,
+        role
+      );
+      console.log("User registered: ", user);
       router.push("/registration/team-selection");
     } catch (err) {
-      console.error(err);
-      setError("Failed to register. Please try again.");
+      console.log("error registering user", err);
     }
   };
 

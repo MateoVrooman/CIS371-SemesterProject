@@ -25,6 +25,8 @@ const CreateTeam = () => {
         body: JSON.stringify({ teamName, userId }),
       });
 
+      console.log("Response: ", response);
+
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.error || "Failed to create team");
@@ -32,7 +34,7 @@ const CreateTeam = () => {
       }
 
       const data = await response.json();
-      router.push(`/team/${data.teamId}`);
+      router.push("/dashboard");
     } catch (err) {
       setError("Failed to create team. Please try again");
     }

@@ -1,7 +1,3 @@
-// Mateo Vrooman - RowIntel - CIS371
-
-// context/AuthContext.tsx
-
 "use client";
 import {
   createContext,
@@ -17,48 +13,39 @@ import { useRouter } from "next/navigation";
 // Initialize Firebase auth instance
 const auth = getAuth(app);
 
-// Create the authentication context
-export const AuthContext = createContext({});
+// Define the shape of the AuthContext
 
-// Custom hook to access the authentication context
-export const useAuthContext = () => useContext(AuthContext);
+export const AuthContext = createContext<User | null>(null);
 
 interface AuthContextProviderProps {
   children: ReactNode;
 }
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
-  // Set up state to track the authenticated user and loading status
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    // Subscribe to the authentication state changes
+    console.log("Mounted auth context");
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in
-        console.log("User is signed in: ", user);
-        setUser(user);
-        router.push("/dashboard"); // Redirect to dashboard after login
-      } else {
-        // User is signed out
-        console.log("User is signed out");
-        setUser(null);
-        //router.push("/login"); // Redirect to login if not authenticated
-      }
-      // Set loading to false once authentication state is determined
+      console.log("AuthStateChanged. User: ", user);
+      setUser(user);
       setLoading(false);
     });
 
-    // Unsubscribe from the authentication state changes when the component is unmounted
     return () => unsubscribe();
   }, []);
 
   // Provide the authentication context to child components
   return (
-    <AuthContext.Provider value={{ user }}>
-      {loading ? <div>Loading...</div> : children}
+    <AuthContext.Provider value={user}>
+      {!loading && children}
     </AuthContext.Provider>
   );
+}
+
+// Custom hook to use the authentication context
+export function useAuth() {
+  return useContext(AuthContext);
 }

@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useAuthContext } from "@/app/context/AuthContext";
+import { useAuth } from "@/app/context/AuthContext";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
-  const user = useAuthContext();
+  const user = useAuth();
   const router = useRouter();
   const auth = getAuth();
 
@@ -22,8 +22,8 @@ const Navbar = () => {
           <h1 className="text-2xl font-bold cursor-pointer">RowIntel</h1>
         </Link>
         <div className="flex gap-12">
-          <Link href="/dashboard" className="hover:underline">
-            Dashboard
+          <Link href="/team" className="hover:underline">
+            Team home
           </Link>
           <Link href="/training-plans" className="hover:underline">
             Training Plans

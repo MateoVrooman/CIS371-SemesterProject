@@ -20,17 +20,25 @@ export const registerUser = async (
     );
     const user = userCredential.user;
 
+    if (!user) {
+      console.error("User is null after createUserWithEmailAndPassword");
+      return { success: false, error: "User creation failed" };
+    }
+
     console.log("Created user with email");
 
-    // Create user in Firestore
-    await setDoc(doc(db, "users", user.uid), {
+    const userData = {
       userId: user.uid,
       email,
       role,
       firstName,
       lastName,
-    });
-    return { success: true, userId: user.uid };
+    };
+
+    await setDoc(doc(db, "users", user.uid), userData);
+    console.log("Doc created in firestore");
+
+    return user;
   } catch (error) {
     console.error(error);
     return { success: false, error: (error as Error).message };
@@ -43,5 +51,5 @@ export const loginUser = async (email: string, password: string) => {
     email,
     password
   );
-  return { uid: userCredential.user.uid, email: userCredential.user.email };
+  return userCredential.user;
 };
