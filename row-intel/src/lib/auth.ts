@@ -3,7 +3,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 export const registerUser = async (
   email: string,
@@ -52,4 +52,16 @@ export const loginUser = async (email: string, password: string) => {
     password
   );
   return userCredential.user;
+};
+
+export const getCoachStatus = async (uid: string) => {
+  try {
+    const userRef = await getDoc(doc(db, "users", uid));
+    if (userRef.exists()) {
+      return userRef.data().role === "coach"; // Ensure it returns a boolean
+    }
+  } catch (err) {
+    console.log("Error fetching user data: ", err);
+  }
+  return false;
 };
