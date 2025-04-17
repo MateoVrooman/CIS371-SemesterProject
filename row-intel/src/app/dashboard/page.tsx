@@ -66,7 +66,7 @@ const Dashboard = () => {
 
     fetchRole();
     fetchActivePlan();
-  }, []);
+  }, [user]);
 
   console.log("Is coach: ", isCoach);
 
