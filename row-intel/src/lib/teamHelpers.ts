@@ -83,3 +83,80 @@ export const joinTeam = async (userId: string, inviteCode: string) => {
     return { success: false, error: "Server error" };
   }
 };
+
+// Generate a random alphanumeric code
+export const generateJoinCode = (length = 6): string => {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  return Array.from({ length }, () =>
+    chars.charAt(Math.floor(Math.random() * chars.length))
+  ).join("");
+};
+
+// Get team name by ID
+export const getTeamName = async (teamId: string): Promise<string | null> => {
+  const teamRef = doc(db, "teams", teamId);
+  const teamSnap = await getDoc(teamRef);
+
+  if (teamSnap.exists()) {
+    return teamSnap.data().teamName;
+  }
+
+  return null;
+};
+
+// Check if join code has expired
+export const getJoinCodeStatus = async (
+  teamId: string
+): Promise<{ joinCode: string; expired: boolean } | null> => {
+  const teamRef = doc(db, "teams", teamId);
+  const teamSnap = await getDoc(teamRef);
+
+  if (!teamSnap.exists()) return null;
+
+  const data = teamSnap.data();
+  const now = Date.now();
+  const expired = now > data.joinCodeExpires;
+
+  return {
+    joinCode: data.joinCode,
+    expired,
+  };
+};
+
+// Update the team with a new join code + expiration (1 week from now)
+export const generateNewJoinCode = async (teamId: string): Promise<string> => {
+  const newCode = generateJoinCode();
+  const expiration = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days
+
+  const teamRef = doc(db, "teams", teamId);
+  await updateDoc(teamRef, {
+    joinCode: newCode,
+    joinCodeExpires: expiration,
+  });
+
+  return newCode;
+};
+
+// Get full names of all team members by their user IDs
+export const getTeamMemberNames = async (teamId: string): Promise<string[]> => {
+  const teamRef = doc(db, "teams", teamId);
+  const teamSnap = await getDoc(teamRef);
+
+  if (!teamSnap.exists()) return [];
+
+  const memberIds: string[] = teamSnap.data().members || [];
+
+  // Parallel fetch names from `users` collection
+  const nameFetches = memberIds.map(async (uid) => {
+    const userRef = doc(db, "users", uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      return userSnap.data().firstName + " " + userSnap.data().lastName;
+    } else {
+      return "Unknown";
+    }
+  });
+
+  return await Promise.all(nameFetches);
+};

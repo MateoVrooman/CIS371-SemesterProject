@@ -12,7 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html>
-      <body className="h-screen w-screen overflow-hidden flex flex-col">
+      <body className="md:h-screen h-fit w-screen flex flex-col">
         <AuthContextProvider>
           <Navbar />
           {children}

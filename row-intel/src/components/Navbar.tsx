@@ -18,18 +18,18 @@ const Navbar = () => {
   return (
     <nav className="bg-primary-darkBlue text-white py-4">
       <div className="container mx-auto flex justify-between items-center px-4">
-        <Link href="/">
+        <Link href="/dashboard">
           <h1 className="text-2xl font-bold cursor-pointer">RowIntel</h1>
         </Link>
         <div className="flex gap-12">
-          <Link href="/team" className="hover:underline">
-            Team home
-          </Link>
           <Link href="/training-plans" className="hover:underline">
             Training Plans
           </Link>
           <Link href="/workouts" className="hover:underline">
             Workouts
+          </Link>
+          <Link href="/team" className="hover:underline">
+            Team
           </Link>
         </div>
         <div className="flex gap-4">

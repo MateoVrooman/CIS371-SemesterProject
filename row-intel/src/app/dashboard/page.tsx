@@ -17,11 +17,23 @@ import {
 } from "@/components/ui/card";
 import { getCoachStatus } from "@/lib/auth";
 import AddWorkout from "@/components/AddWorkout";
+import { Button } from "@/components/ui/button";
+import { PlannedWorkout } from "@/lib/types";
+import {
+  getActivePlan,
+  getTeam,
+  getTrainingPlanWorkouts,
+} from "@/lib/dbHelpers";
 
 const Dashboard = () => {
   const user = useAuth();
   const router = useRouter();
-  const [isCoach, setIsCoach] = useState<boolean | null>(null);
+  const [isCoach, setIsCoach] = useState<boolean>(false);
+  const [activePlanWorkouts, setActivePlanWorkouts] = useState<
+    PlannedWorkout[]
+  >([]);
+  const [activePlanId, setActivePlanId] = useState<string>("");
+  const [activePlanName, setActivePlanName] = useState<string>("");
 
   useEffect(() => {
     const fetchRole = async () => {
@@ -32,14 +44,29 @@ const Dashboard = () => {
         setIsCoach(false);
       }
     };
+    const fetchActivePlan = async () => {
+      if (user) {
+        const teamId = await getTeam(user.uid);
+        const activePlan = await getActivePlan(teamId);
+        if (!activePlan) {
+          console.log("No active plan");
+          return;
+        }
+        const workouts = await getTrainingPlanWorkouts(activePlan.id);
+        if (!workouts) {
+          console.log("No workouts found");
+          return;
+        }
+        setActivePlanWorkouts(workouts);
+        setActivePlanId(activePlan.id);
+        setActivePlanName(activePlan.name);
+        console.log("Active plan workouts: ", workouts);
+      }
+    };
 
     fetchRole();
+    fetchActivePlan();
   }, []);
-
-  const handleSignOut = async () => {
-    await signOut(auth);
-    router.push("/login");
-  };
 
   console.log("Is coach: ", isCoach);
 
@@ -48,58 +75,34 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="w-screen h-screen overflow-hidden flex flex-row ">
-      <div className="w-2/3 h-full bg-primary-white px-6 py-4 flex flex-col gap-3">
-        <CalendarCard />
-
+    <div className="w-screen h-screen md:overflow-hidden flex md:flex-row flex-col">
+      <div className="md:w-2/3 w-full h-full bg-primary-white px-6 py-4 flex flex-col gap-3">
+        <CalendarCard
+          workouts={activePlanWorkouts}
+          activePlanId={activePlanId}
+          isCoach={isCoach}
+        />
+      </div>
+      <div className="md:w-1/3 w-full h-full bg-primary-white px-6 py-4 flex flex-col gap-y-4">
+        <WorkoutHistoryView isCoach={isCoach} />
         {isCoach ? ( // Render coach dashboard actions
-          <div className="w-full h-1/3 flex flex-row justify-between py-2 gap-x-2">
+          <div className="w-full h-1/4 flex flex-row justify-between gap-x-2">
             <Card
-              className="w-full h-full text-center bg-primary-grey border-2 border-primary-grey hover:border-primary-lightBlue hover:shadow-md"
-              onClick={() => router.push("/training-plans")}
+              className="w-full h-full text-center bg-primary-darkBlue border-2 border-primary-darkBlue hover:border-primary-lightBlue hover:shadow-md text-white"
+              onClick={() => router.push("/training-plans/create")}
             >
-              <CardTitle>Training Plans</CardTitle>
-            </Card>
-            <Card
-              className="w-full h-full text-center bg-primary-grey  border-2 border-primary-grey hover:border-primary-lightBlue hover:shadow-md"
-              onClick={() => router.push("/lineups")}
-            >
-              <CardTitle>Lineups</CardTitle>
-            </Card>
-            <Card
-              className="w-full h-full text-center bg-primary-grey  border-2 border-primary-grey hover:border-primary-lightBlue hover:shadow-md"
-              onClick={() => router.push("workout-results")}
-            >
-              <CardTitle>Workout Results</CardTitle>
+              <CardTitle>Create Training Plan</CardTitle>
             </Card>
           </div>
         ) : (
-          // Render athlete dashboard actions
-          <div className="w-full h-1/3 flex flex-row justify-between py-2 gap-x-2">
-            <Card
-              className="w-full h-full text-center bg-primary-grey border-2 border-primary-grey hover:border-primary-lightBlue hover:shadow-md"
-              onClick={() => router.push("/training-plans")}
-            >
-              <CardTitle>View Training Plans</CardTitle>
-            </Card>
-            <Card
-              className="w-full h-full text-center bg-primary-grey  border-2 border-primary-grey hover:border-primary-lightBlue hover:shadow-md"
-              onClick={() => router.push("/lineups")}
-            >
-              <CardTitle>View Lineups</CardTitle>
-            </Card>
-            <Card className="w-full h-full text-center bg-primary-grey  border-2 border-primary-grey hover:border-primary-lightBlue hover:shadow-md">
-              <CardTitle>Log New Workout</CardTitle>
-              <AddWorkout user={user} />
-            </Card>
-          </div>
+          ""
         )}
-      </div>
-      <div className="w-1/3 h-full bg-primary-white px-6 py-4 ">
-        <WorkoutHistoryView />
       </div>
     </div>
   );
 };
 
 export default Dashboard;
+function getPlannedWorkouts(activePlanId: any) {
+  throw new Error("Function not implemented.");
+}
