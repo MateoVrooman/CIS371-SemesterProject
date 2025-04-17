@@ -142,7 +142,7 @@ const Calendar = ({
     setEvents(defaultEvents);
     setWorkouts(defaultWorkouts);
     setActivePlanId(defaultPlanId);
-  }, [defaultEvents, defaultWorkouts]);
+  }, [defaultEvents, defaultWorkouts, defaultPlanId]);
 
   useHotkeys("m", () => changeView("month"), {
     enabled: enableHotkeys,
