@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/components/context/AuthContext";
 import { createTrainingPlan, getTeam, setActivePlan } from "@/lib/dbHelpers";
 import WorkoutBuilder from "./WorkoutBuilder";
 import { PlannedWorkout } from "@/lib/types";

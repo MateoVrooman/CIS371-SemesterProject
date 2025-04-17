@@ -1,7 +1,7 @@
 // Mateo Vrooman - RowIntel - CIS371
 
 // src/app/layout.tsx
-import { AuthContextProvider } from "./context/AuthContext";
+import { AuthContextProvider } from "../components/context/AuthContext";
 import Navbar from "../components/Navbar";
 import "./globals.css";
 

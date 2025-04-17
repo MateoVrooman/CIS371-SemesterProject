@@ -1,4 +1,4 @@
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/components/context/AuthContext";
 import {
   Card,
   CardContent,

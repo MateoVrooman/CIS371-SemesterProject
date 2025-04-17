@@ -25,7 +25,7 @@ import { useState } from "react";
 import { PlannedWorkout } from "@/lib/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import AddWorkout from "./AddWorkout";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/components/context/AuthContext";
 
 interface TrainingPlanCalendarProps {
   workouts: PlannedWorkout[];

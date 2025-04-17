@@ -30,7 +30,7 @@ import { User } from "firebase/auth";
 import ErgForm from "./addWorkoutForms/ErgForm";
 import WeightsForm from "./addWorkoutForms/WeightsForm";
 import CrossTrainForm from "./addWorkoutForms/CrossTrainForm";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/components/context/AuthContext";
 import { PlannedWorkout, SubmittedWorkout, WorkoutType } from "@/lib/types";
 import { getCoachStatus } from "@/lib/auth";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/components/context/AuthContext";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
