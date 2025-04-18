@@ -20,7 +20,7 @@ const WorkoutBuilder = ({ setWorkouts }: WorkoutBuilderProps) => {
 
   const handleAddWorkout = () => {
     const dateVal = new Date(date);
-    dateVal.setHours(dateVal.getHours() + 1);
+    dateVal.setDate(dateVal.getDate() + 1);
 
     const newWorkout: PlannedWorkout = {
       id: "",
