@@ -19,11 +19,13 @@ const WorkoutBuilder = ({ setWorkouts }: WorkoutBuilderProps) => {
   const [date, setDate] = useState("");
 
   const handleAddWorkout = () => {
+    const dateVal = new Date(date);
+
     const newWorkout: PlannedWorkout = {
       id: "",
       workoutType,
       rpe,
-      date: Timestamp.fromDate(new Date()),
+      date: Timestamp.fromDate(dateVal),
     };
 
     if (workoutType === "row" || workoutType === "erg") {
