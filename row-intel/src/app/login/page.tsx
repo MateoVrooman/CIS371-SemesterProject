@@ -30,6 +30,7 @@ const Login = () => {
       console.log("User signed in: ", user);
       router.push("/dashboard");
     } catch (err) {
+      setError(String(err));
       console.log("Error signing in: ", err);
     }
   };
@@ -63,7 +64,7 @@ const Login = () => {
         </CardContent>
         <CardFooter className="flex flex-col items-center">
           <p className="text-center font-light, text-sm">
-            Don't have an account?
+            Don&apos;t have an account?
           </p>
           <a
             href="/registration"

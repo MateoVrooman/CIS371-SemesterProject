@@ -20,19 +20,18 @@ import {
 import React, { FormEvent, useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import {
-  logNewWorkout,
   getTeam,
   getName,
   submitPlannedWorkout,
   getSubmittedWorkouts,
 } from "@/lib/dbHelpers";
-import { User } from "firebase/auth";
 import ErgForm from "./addWorkoutForms/ErgForm";
 import WeightsForm from "./addWorkoutForms/WeightsForm";
 import CrossTrainForm from "./addWorkoutForms/CrossTrainForm";
 import { useAuth } from "@/components/context/AuthContext";
 import { PlannedWorkout, SubmittedWorkout, WorkoutType } from "@/lib/types";
 import { getCoachStatus } from "@/lib/auth";
+import { Timestamp } from "firebase/firestore";
 
 type AddWorkoutProps = {
   children: React.ReactNode;
@@ -73,11 +72,11 @@ const SubmitPlanWorkout: React.FC<AddWorkoutProps> = ({
   };
 
   const user = useAuth();
-  if (!user) return null;
 
   useEffect(() => {
     const fetchRole = async () => {
       // Check if the user is a coach
+      if (!user) return;
       const isCoach = await getCoachStatus(user.uid);
       console.log("Is coach: ", isCoach);
       setIsCoach(isCoach);
@@ -110,9 +109,20 @@ const SubmitPlanWorkout: React.FC<AddWorkoutProps> = ({
     setCrossType("");
   };
 
+  if (!user) {
+    return <div>No user</div>;
+  }
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const workoutData: any = { workoutType };
+    const workoutData: SubmittedWorkout = {
+      workoutType,
+      date: Timestamp.fromDate(new Date()),
+      rpe: 0,
+      userId: "",
+      userName: "",
+      plannedWorkoutId: "",
+    };
     if (workoutType === "row" || workoutType === "erg") {
       workoutData.distance = distance;
       workoutData.time = time;

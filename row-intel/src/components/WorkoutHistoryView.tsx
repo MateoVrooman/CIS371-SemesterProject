@@ -1,12 +1,5 @@
 import { useAuth } from "@/components/context/AuthContext";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { getUserWorkouts, getTeamWorkouts, getTeam } from "@/lib/dbHelpers";
 import { useEffect, useState } from "react";
 import WorkoutDataDisplay from "./workoutDataDisplay";
@@ -14,14 +7,12 @@ import { Workout } from "@/lib/types";
 
 const WorkoutHistoryView = ({ isCoach }: { isCoach: boolean }) => {
   const user = useAuth();
-  if (!user) {
-    return <div>No user</div>;
-  }
 
   const [workouts, setWorkouts] = useState<Workout[]>([]);
 
   useEffect(() => {
     const fetchWorkouts = async () => {
+      if (!user) return;
       if (isCoach) {
         const teamId = await getTeam(user.uid);
         const teamWorkouts = await getTeamWorkouts(teamId);
@@ -34,6 +25,10 @@ const WorkoutHistoryView = ({ isCoach }: { isCoach: boolean }) => {
     };
     fetchWorkouts();
   }, [isCoach, user]);
+
+  if (!user) {
+    return <div>No user</div>;
+  }
 
   return (
     <Card className="w-full bg-primary-grey h-full min-h-96 text-center flex flex-col gap-0 overflow-y-scroll">

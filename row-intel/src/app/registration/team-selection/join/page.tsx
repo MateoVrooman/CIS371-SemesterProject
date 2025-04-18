@@ -17,10 +17,11 @@ const JoinTeam = () => {
       if (!userId) {
         throw new Error("User not authenticated");
       }
-      const data = await joinTeam(userId, joinCode);
+      await joinTeam(userId, joinCode);
       router.push("/dashboard");
     } catch (err) {
       setError("Invalid team code. Please try again.");
+      console.log("Error joining team: ", err);
     }
   };
 

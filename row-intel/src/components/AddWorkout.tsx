@@ -18,12 +18,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FormEvent, useState } from "react";
-import { Input } from "./ui/input";
 import { logNewWorkout, getTeam, getName } from "@/lib/dbHelpers";
 import { User } from "firebase/auth";
 import ErgForm from "./addWorkoutForms/ErgForm";
 import WeightsForm from "./addWorkoutForms/WeightsForm";
 import CrossTrainForm from "./addWorkoutForms/CrossTrainForm";
+import {
+  CrossTrainingWorkout,
+  RowOrErgWorkout,
+  WeightsWorkout,
+} from "@/lib/types";
+import { Timestamp } from "firebase/firestore";
 
 type AddWorkoutProps = {
   user: User;
@@ -37,13 +42,6 @@ const AddWorkout: React.FC<AddWorkoutProps> = ({ user }) => {
   const [rpe, setRpe] = useState<number>(0);
   const [setsReps, setSetsReps] = useState<string>("");
   const [crossType, setCrossType] = useState<string>("");
-  const [file, setFile] = useState<File | null>(null);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
-  };
 
   const resetForm = () => {
     setWorkoutType("row");
@@ -57,23 +55,42 @@ const AddWorkout: React.FC<AddWorkoutProps> = ({ user }) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const workoutData: Record<string, any> = { workoutType };
+    let workoutData: RowOrErgWorkout | CrossTrainingWorkout | WeightsWorkout;
+
+    const timestamp = Timestamp.fromDate(new Date());
+
     if (workoutType === "row" || workoutType === "erg") {
-      workoutData.distance = distance;
-      workoutData.time = time;
-      if (pace) workoutData.pace = pace;
-      workoutData.rpe = rpe;
-    } else if (workoutType === "weights") {
-      workoutData.setsReps = setsReps;
+      workoutData = {
+        id: "",
+        workoutType,
+        timestamp,
+        distance,
+        time,
+        rpe,
+      };
+      if (pace) {
+        workoutData.pace = pace;
+      }
     } else if (workoutType === "cross training") {
-      workoutData.crossType = crossType;
-      workoutData.time = time;
-      workoutData.distance = distance;
-      workoutData.rpe = rpe;
+      workoutData = {
+        id: "",
+        workoutType,
+        timestamp,
+        crossType: crossType!,
+        distance,
+        time,
+        rpe,
+      };
+    } else {
+      workoutData = {
+        id: "",
+        workoutType: "weights",
+        timestamp,
+        setsReps: setsReps!,
+        rpe,
+      };
     }
-    if (file) {
-      workoutData.file = file.name;
-    }
+
     try {
       const userName = await getName(user.uid);
       const teamId = await getTeam(user.uid);
@@ -146,8 +163,6 @@ const AddWorkout: React.FC<AddWorkoutProps> = ({ user }) => {
               }}
             />
           )}
-          <h3>Attach File (optional)</h3>
-          <Input type="file" onChange={handleFileChange} />
           <DialogFooter className="sm:justify-start mt-2">
             <DialogClose asChild>
               <Button type="submit" variant="secondary">

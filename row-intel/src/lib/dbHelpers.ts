@@ -12,7 +12,6 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { PlannedWorkout, SubmittedWorkout } from "@/lib/types";
-import { pl } from "date-fns/locale";
 
 export const logNewWorkout = async (
   userName: string,
@@ -146,9 +145,12 @@ export const setActivePlan = async (teamId: string, planId: string) => {
 export const getActivePlan = async (teamId: string) => {
   try {
     const teamRef = doc(db, "teams", teamId);
+
     const teamDoc = await getDoc(teamRef);
     const activePlanId = teamDoc.data()?.activePlan;
-    const activePlanName = teamDoc.data()?.name;
+    const planRef = doc(db, "trainingPlans", activePlanId);
+    const planDoc = await getDoc(planRef);
+    const activePlanName = planDoc.data()?.name;
     return { id: activePlanId, name: activePlanName };
   } catch (error) {
     console.error("Error getting active plan:", error);
@@ -241,8 +243,8 @@ export const submitPlannedWorkout = async (
     };
     await addDoc(userRef, dataWithTime);
     await addDoc(teamWorkoutRef, teamDataWithTime);
-    const workoutDoc = await setDoc(workoutRef, workoutData);
-    const submissionDoc = await addDoc(submissionRef, dataWithName);
+    await setDoc(workoutRef, workoutData);
+    await addDoc(submissionRef, dataWithName);
     console.log("Workout submitted successfully");
   } catch (error) {
     console.error("Error submitting planned workout:", error);

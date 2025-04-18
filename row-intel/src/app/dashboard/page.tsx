@@ -3,21 +3,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/context/AuthContext";
-import { signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
 import CalendarCard from "@/components/CalendarCard";
 import WorkoutHistoryView from "@/components/WorkoutHistoryView";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { getCoachStatus } from "@/lib/auth";
-import AddWorkout from "@/components/AddWorkout";
-import { Button } from "@/components/ui/button";
 import { PlannedWorkout } from "@/lib/types";
 import {
   getActivePlan,
@@ -77,6 +66,9 @@ const Dashboard = () => {
   return (
     <div className="w-screen h-screen md:overflow-hidden flex md:flex-row flex-col">
       <div className="md:w-2/3 w-full h-full bg-primary-white px-6 py-4 flex flex-col gap-3">
+        <h2 className="text-2xl font-bold">
+          Current Training Plan: {activePlanName}
+        </h2>
         <CalendarCard
           workouts={activePlanWorkouts}
           activePlanId={activePlanId}
@@ -103,6 +95,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-function getPlannedWorkouts(activePlanId: any) {
-  throw new Error("Function not implemented.");
-}

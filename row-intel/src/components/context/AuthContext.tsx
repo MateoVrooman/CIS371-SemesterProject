@@ -8,7 +8,6 @@ import {
 } from "react";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { app } from "@/lib/firebase";
-import { useRouter } from "next/navigation";
 
 // Initialize Firebase auth instance
 const auth = getAuth(app);
@@ -24,7 +23,6 @@ interface AuthContextProviderProps {
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     console.log("Mounted auth context");

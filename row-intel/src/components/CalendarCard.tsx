@@ -2,7 +2,6 @@
 
 import {
   Calendar,
-  CalendarDayView,
   CalendarCurrentDate,
   CalendarNextTrigger,
   CalendarPrevTrigger,
@@ -13,15 +12,7 @@ import {
   CalendarWeekView,
 } from "./ui/full-calendar";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { PlannedWorkout } from "@/lib/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import AddWorkout from "./AddWorkout";
@@ -53,7 +44,7 @@ const CalendarCard = ({
   activePlanId,
   isCoach,
 }: TrainingPlanCalendarProps) => {
-  const events: CalendarEvent[] = workouts.map((workout, index) => ({
+  const events: CalendarEvent[] = workouts.map((workout) => ({
     id: workout.id,
     title: workout.workoutType,
     start: new Date(workout.date.seconds * 1000),

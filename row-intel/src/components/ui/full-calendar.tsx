@@ -9,11 +9,9 @@ import {
   addMonths,
   addWeeks,
   addYears,
-  differenceInMinutes,
   format,
   getMonth,
   isSameDay,
-  isSameHour,
   isSameMonth,
   isToday,
   setHours,
@@ -213,18 +211,10 @@ const CalendarViewTrigger = forwardRef<
 });
 CalendarViewTrigger.displayName = "CalendarViewTrigger";
 
-const EventGroup = ({
-  events,
-  hour,
-}: {
-  events: CalendarEvent[];
-  hour: Date;
-}) => {
+const EventGroup = ({ events }: { events: CalendarEvent[]; hour: Date }) => {
   return (
     <div className=" border-t py-2">
       {events.map((event) => {
-        const hoursDifference =
-          differenceInMinutes(event.end, event.start) / 60;
         const startPosition = event.start.getMinutes() / 60;
 
         return (
@@ -267,7 +257,7 @@ const CalendarDayView = () => {
 };
 
 const CalendarWeekView = () => {
-  const { view, date, locale, events, workouts } = useCalendar();
+  const { view, date, locale, events } = useCalendar();
   console.log("Events from weekly view:", events);
 
   const weekDates = useMemo(() => {
@@ -298,7 +288,7 @@ const CalendarWeekView = () => {
     <div className="flex flex-col relative overflow-auto h-full">
       <div className="flex sticky top-0 items-center z-10 border-b mb-3">
         <div className="w-12"></div>
-        {headerDays.map((date, i) => (
+        {headerDays.map((date) => (
           <div
             key={date.toString()}
             className={cn(

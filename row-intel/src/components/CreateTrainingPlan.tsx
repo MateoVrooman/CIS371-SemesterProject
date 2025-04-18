@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/context/AuthContext";
 import { createTrainingPlan, getTeam, setActivePlan } from "@/lib/dbHelpers";
@@ -14,12 +12,7 @@ import WorkoutBuilder from "./WorkoutBuilder";
 import { PlannedWorkout } from "@/lib/types";
 
 export default function CreateTrainingPlan() {
-  const user = useAuth();
-  if (!user) {
-    return <div>No user</div>;
-  }
   const [teamId, setTeamId] = useState<string>("");
-
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -29,8 +22,11 @@ export default function CreateTrainingPlan() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const user = useAuth();
+
   useEffect(() => {
     const fetchTeam = async () => {
+      if (!user) return;
       const team = await getTeam(user.uid);
       setTeamId(team);
     };

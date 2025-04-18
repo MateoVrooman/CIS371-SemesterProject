@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { Workout, WorkoutType, PlannedWorkout } from "@/lib/types"; // Assuming you have these types
+import { WorkoutType, PlannedWorkout } from "@/lib/types"; // Assuming you have these types
 import { Input } from "./ui/input";
+import { Timestamp } from "firebase/firestore";
 
 interface WorkoutBuilderProps {
   workouts: PlannedWorkout[];
   setWorkouts: React.Dispatch<React.SetStateAction<PlannedWorkout[]>>;
 }
 
-const WorkoutBuilder = ({ workouts, setWorkouts }: WorkoutBuilderProps) => {
+const WorkoutBuilder = ({ setWorkouts }: WorkoutBuilderProps) => {
   const [workoutType, setWorkoutType] = useState<WorkoutType>("row");
   const [distance, setDistance] = useState<number>();
   const [time, setTime] = useState<number>();
@@ -19,9 +20,10 @@ const WorkoutBuilder = ({ workouts, setWorkouts }: WorkoutBuilderProps) => {
 
   const handleAddWorkout = () => {
     const newWorkout: PlannedWorkout = {
+      id: "",
       workoutType,
       rpe,
-      date: new Date(date),
+      date: Timestamp.fromDate(new Date()),
     };
 
     if (workoutType === "row" || workoutType === "erg") {

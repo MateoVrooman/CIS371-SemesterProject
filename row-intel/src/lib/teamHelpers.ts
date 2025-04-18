@@ -6,7 +6,6 @@ import {
   arrayUnion,
   getDoc,
   getDocs,
-  addDoc,
   where,
   query,
   setDoc,
@@ -19,7 +18,7 @@ export const createTeam = async (teamName: string, userId: string) => {
   const teamRef = doc(db, "teams", teamId);
   const joinCode = nanoid(6); // Generate a random 6 character code for joining the team
 
-  const teamDoc = await setDoc(teamRef, {
+  await setDoc(teamRef, {
     teamId: teamId,
     teamName: teamName,
     createdBy: userId,

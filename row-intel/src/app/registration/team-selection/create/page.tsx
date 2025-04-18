@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createTeam } from "@/lib/teamHelpers";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/firebase";
@@ -33,9 +32,10 @@ const CreateTeam = () => {
         return;
       }
 
-      const data = await response.json();
+      await response.json();
       router.push("/dashboard");
     } catch (err) {
+      console.log(err);
       setError("Failed to create team. Please try again");
     }
   };

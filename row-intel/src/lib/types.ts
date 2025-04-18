@@ -15,7 +15,7 @@ export interface BaseWorkout {
 export interface RowOrErgWorkout extends BaseWorkout {
   workoutType: "row" | "erg";
   distance: number; // meters
-  time: string; // e.g. "6:30"
+  time: number; // e.g. "6:30"
   pace?: string; // optional, e.g. "1:45/500m"
   rpe: number; // Rate of perceived exertion
 }
@@ -24,7 +24,7 @@ export interface CrossTrainingWorkout extends BaseWorkout {
   workoutType: "cross training";
   crossType: string; // e.g. "biking", "swimming"
   distance: number; // meters or miles
-  time: string; // e.g. "45:00"
+  time: number; // e.g. "45:00"
   rpe: number; // Rate of perceived exertion
 }
 

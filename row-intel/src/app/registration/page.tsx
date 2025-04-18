@@ -20,7 +20,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -48,6 +47,7 @@ const Register = () => {
       console.log("User registered: ", user);
       router.push("/registration/team-selection");
     } catch (err) {
+      setError(String(err));
       console.log("error registering user", err);
     }
   };
