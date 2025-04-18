@@ -16,7 +16,7 @@ const Page = () => {
       {user ? (
         <div>
           <p className="text-xl">
-            You're logged in as{" "}
+            You&apos;re logged in as{" "}
             <strong>{user.displayName || user.email}</strong>.
           </p>
         </div>
