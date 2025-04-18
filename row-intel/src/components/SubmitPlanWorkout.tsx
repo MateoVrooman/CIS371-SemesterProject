@@ -237,19 +237,30 @@ const SubmitPlanWorkout: React.FC<AddWorkoutProps> = ({
               View submissions from your athletes and provide feedback
             </DialogDescription>
           </DialogHeader>
-          {submittedWorkouts.map((workout, index) => (
-            <div
-              key={index}
-              className="flex flex-row justify-evenly w-full mb-2 border-b"
-            >
-              {workout.userName + " - " || ""}
-              {workout.distance + "m " || ""}
-              {workout.time + "min " || ""}
-              {workout.pace || ""}
-              {workout.setsReps || ""}
-              {workout.crossTrainingType || ""}
-            </div>
-          ))}
+          {submittedWorkouts.map((workout, index) =>
+            workout.workoutType === "weights" ? (
+              <div
+                key={index}
+                className="flex flex-row justify-evenly w-full mb-2 border-b"
+              >
+                {workout.userName + " - " || ""}
+                {workout.setsReps || ""}
+                {workout.rpe || ""}
+              </div>
+            ) : (
+              <div
+                key={index}
+                className="flex flex-row justify-evenly w-full mb-2 border-b"
+              >
+                {workout.userName + " - " || ""}
+                {workout.distance + "m " || ""}
+                {workout.time + "min " || ""}
+                {workout.pace || ""}
+                {workout.setsReps || ""}
+                {workout.crossTrainingType || ""}
+              </div>
+            )
+          )}
         </DialogContent>
       )}
     </Dialog>

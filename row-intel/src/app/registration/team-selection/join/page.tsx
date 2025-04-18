@@ -31,6 +31,7 @@ const JoinTeam = () => {
       <Input
         type="text"
         placeholder="Enter join code"
+        className="max-w-lg"
         value={joinCode}
         onChange={(e) => setJoinCode(e.target.value)}
       />
