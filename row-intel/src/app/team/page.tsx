@@ -48,7 +48,7 @@ export default function Team() {
     };
 
     loadTeamData();
-  }, []);
+  }, [user]);
 
   const handleGenerateNewCode = async () => {
     const newCode = await generateNewJoinCode(teamId);
