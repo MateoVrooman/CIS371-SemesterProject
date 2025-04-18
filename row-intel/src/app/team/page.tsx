@@ -9,6 +9,8 @@ import {
   getJoinCodeStatus,
   generateNewJoinCode,
 } from "@/lib/teamHelpers"; // adjust path to where you put the helpers
+import { getCoachStatus } from "@/lib/auth";
+import { useAuth } from "@/components/context/AuthContext";
 
 const teamId = "cpoJ1WukyQPbAgLhjtGS"; // Replace with actual or dynamic ID
 
@@ -18,10 +20,16 @@ export default function Team() {
   const [joinCode, setJoinCode] = useState<string>("");
   const [isExpired, setIsExpired] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
+  const [isCoach, setIsCoach] = useState<boolean>(false);
+
+  const user = useAuth();
 
   useEffect(() => {
     const loadTeamData = async () => {
       setLoading(true);
+      if (!user) return;
+      const status = await getCoachStatus(user.uid);
+      setIsCoach(status);
       const [name, members, codeInfo] = await Promise.all([
         getTeamName(teamId),
         getTeamMemberNames(teamId),
@@ -81,9 +89,11 @@ export default function Team() {
                     This join code has expired.
                   </p>
                 )}
-                <Button onClick={handleGenerateNewCode} variant="outline">
-                  Generate New Code
-                </Button>
+                {isCoach && (
+                  <Button onClick={handleGenerateNewCode} variant="outline">
+                    Generate New Code
+                  </Button>
+                )}
               </div>
             </>
           )}
