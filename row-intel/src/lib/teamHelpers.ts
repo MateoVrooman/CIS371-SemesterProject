@@ -1,3 +1,4 @@
+import { UUID } from "crypto";
 import { db } from "./firebase";
 import {
   doc,
@@ -158,4 +159,14 @@ export const getTeamMemberNames = async (teamId: string): Promise<string[]> => {
   });
 
   return await Promise.all(nameFetches);
+};
+
+export const getTeamId = async (userId: string) => {
+  const userRef = doc(db, "users", userId);
+  const userDoc = await getDoc(userRef);
+  if (userDoc.exists()) {
+    return userDoc.data().teamIds[0];
+  } else {
+    return "";
+  }
 };

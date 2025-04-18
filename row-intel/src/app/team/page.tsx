@@ -8,11 +8,10 @@ import {
   getTeamMemberNames,
   getJoinCodeStatus,
   generateNewJoinCode,
+  getTeamId,
 } from "@/lib/teamHelpers"; // adjust path to where you put the helpers
 import { getCoachStatus } from "@/lib/auth";
 import { useAuth } from "@/components/context/AuthContext";
-
-const teamId = "cpoJ1WukyQPbAgLhjtGS"; // Replace with actual or dynamic ID
 
 export default function Team() {
   const [teamName, setTeamName] = useState<string | null>(null);
@@ -21,6 +20,7 @@ export default function Team() {
   const [isExpired, setIsExpired] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [isCoach, setIsCoach] = useState<boolean>(false);
+  const [teamId, setTeamId] = useState<string>("");
 
   const user = useAuth();
 
@@ -30,12 +30,14 @@ export default function Team() {
       if (!user) return;
       const status = await getCoachStatus(user.uid);
       setIsCoach(status);
+
+      const teamId = await getTeamId(user.uid);
       const [name, members, codeInfo] = await Promise.all([
         getTeamName(teamId),
         getTeamMemberNames(teamId),
         getJoinCodeStatus(teamId),
       ]);
-
+      setTeamId(teamId);
       setTeamName(name);
       setMemberNames(members);
       if (codeInfo) {
